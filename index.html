@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matemáticas 6° | I.E. Paulo VI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;600&family=Righteous&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #1e1b4b; font-family: 'Fredoka', sans-serif; }
+        .title-font { font-family: 'Righteous', cursive; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-10px) rotate(1deg); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 bg-[url('https://www.transparenttextures.com/patterns/graphy-dark.png')] text-white">
+
+    <div class="text-center mb-10">
+        <h1 class="title-font text-5xl md:text-7xl text-yellow-400 mb-2 drop-shadow-lg">
+            MATE-AVENTURA
+        </h1>
+        <p class="text-xl text-blue-200">Zona de Entrenamiento - Grado Sexto</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8 max-w-4xl w-full">
+        
+        <a href="Sexto/sistemas.html" class="group">
+            <div class="bg-orange-500 rounded-3xl p-1 shadow-[0_10px_0_rgb(154,52,18)] card-hover relative overflow-hidden">
+                <div class="bg-orange-600 rounded-[20px] p-8 h-full flex flex-col items-center text-center border-4 border-orange-400/50">
+                    <div class="bg-white/20 p-4 rounded-full mb-4">
+                        <i class="fa-solid fa-scroll text-5xl text-white"></i>
+                    </div>
+                    <h2 class="title-font text-3xl mb-2">VIAJE AL PASADO</h2>
+                    <p class="text-orange-100 mb-6 font-bold">Romanos, Egipcios, Mayas y Chinos.</p>
+                    <span class="bg-white text-orange-600 px-6 py-2 rounded-full font-black shadow-lg group-hover:scale-110 transition-transform">
+                        JUGAR AHORA
+                    </span>
+                </div>
+            </div>
+        </a>
+
+        <a href="Sexto/binario.html" class="group">
+            <div class="bg-purple-600 rounded-3xl p-1 shadow-[0_10px_0_rgb(88,28,135)] card-hover relative overflow-hidden">
+                <div class="bg-purple-700 rounded-[20px] p-8 h-full flex flex-col items-center text-center border-4 border-purple-500/50">
+                    <div class="bg-white/20 p-4 rounded-full mb-4">
+                        <i class="fa-solid fa-robot text-5xl text-white"></i>
+                    </div>
+                    <h2 class="title-font text-3xl mb-2">CÓDIGO SECRETO</h2>
+                    <p class="text-purple-200 mb-6 font-bold">Sistema Binario y Computadoras.</p>
+                    <span class="bg-white text-purple-700 px-6 py-2 rounded-full font-black shadow-lg group-hover:scale-110 transition-transform">
+                        HACKEAR AHORA
+                    </span>
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+    <footer class="mt-16 text-slate-400 text-sm">
+        Prof. Luis Miguel Cabrera
+    </footer>
+
+</body>
+</html>

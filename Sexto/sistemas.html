@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistemas Numéricos | Grado 6°</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Noto+Serif+SC:wght@700&family=Righteous&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        heading: ['Cinzel', 'serif'],
+                        chinese: ['Noto Serif SC', 'serif'],
+                        body: ['Lato', 'sans-serif'],
+                    },
+                    colors: {
+                        egypt: '#c2a661',
+                        roman: '#b91c1c',
+                        maya: '#22c55e',
+                        china: '#ef4444',
+                        paper: '#fdfbf7'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0f172a; color: #334155; }
+        .maya-dot { width: 12px; height: 12px; background: #1e293b; border-radius: 50%; display: inline-block; border: 2px solid #22c55e; }
+        .maya-bar { width: 60px; height: 8px; background: #1e293b; border-radius: 4px; margin: 2px auto; border: 2px solid #22c55e; }
+        .maya-shell { width: 30px; height: 18px; border: 2px solid #22c55e; border-radius: 50% 50% 10% 10%; margin: 0 auto; position: relative; }
+        .maya-shell::after { content: ''; position: absolute; top: 4px; left: 50%; transform: translateX(-50%); width: 20px; height: 2px; background: #22c55e; box-shadow: 0 4px 0 #22c55e; }
+        .egypt-icon { display: inline-block; height: 25px; fill: #0f172a; }
+        
+        /* Estilo tipo papiro para las tarjetas */
+        .ancient-card {
+            background-color: #fdfbf7;
+            background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 pb-20">
+
+    <nav class="bg-slate-950/90 text-white p-4 sticky top-0 z-50 border-b border-white/10">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="../index.html" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg text-sm font-bold transition-colors">
+                <i class="fa-solid fa-arrow-left"></i> MENÚ
+            </a>
+            <h1 class="font-heading text-xl text-yellow-500">Civilizaciones Antiguas</h1>
+        </div>
+    </nav>
+
+    <header class="py-12 text-center px-4 bg-slate-900 text-white">
+        <h2 class="font-heading text-4xl md:text-5xl mb-4 text-yellow-500">Máquina del Tiempo</h2>
+        <p class="text-slate-400 mb-8">Escribe un número y mira cómo lo escribían nuestros antepasados.</p>
+        
+        <div class="max-w-md mx-auto relative">
+            <input type="number" id="mainInput" placeholder="Ej: 125" 
+                   class="w-full bg-slate-800 border-2 border-slate-600 rounded-xl py-4 px-6 text-center text-2xl font-bold text-white focus:border-yellow-500 outline-none"
+                   oninput="convertAll()">
+            <div class="absolute right-4 top-5 text-slate-500"><i class="fa-solid fa-pen"></i></div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 space-y-16 max-w-5xl">
+
+        <section class="ancient-card rounded-2xl overflow-hidden border-t-8 border-roman relative">
+            <div class="bg-roman p-4 flex justify-between items-center text-white">
+                <h3 class="font-heading text-2xl font-bold"><i class="fa-solid fa-building-columns mr-2"></i> IMPERIO ROMANO</h3>
+                <span class="bg-black/30 px-3 py-1 rounded text-xs font-bold">Letras</span>
+            </div>
+            
+            <div class="p-8">
+                <div class="text-center mb-10">
+                    <div id="romanOutput" class="font-heading text-6xl text-roman font-bold mb-2 break-words min-h-[4rem]">...</div>
+                    <p id="romanExplanation" class="text-slate-500 font-mono text-sm bg-slate-200 inline-block px-3 py-1 rounded"></p>
+                </div>
+
+                <div class="bg-slate-100 rounded-xl border-2 border-roman/20 p-6 text-center">
+                    <h4 class="font-heading text-xl text-slate-700 mb-4 font-bold">⚔️ Desafío del Gladiador</h4>
+                    
+                    <div class="inline-block bg-slate-800 text-white px-6 py-2 rounded-lg text-2xl font-bold mb-4">
+                        Reto: <span id="targetNumber" class="text-yellow-400">?</span>
+                    </div>
+
+                    <div class="min-h-[50px] text-3xl font-heading font-bold text-roman mb-4 bg-white border-b-2 border-slate-300 mx-auto max-w-md" id="playerBuild"></div>
+
+                    <div class="flex flex-wrap justify-center gap-2 mb-4">
+                        <button onclick="addRoman('M')" class="w-10 h-10 bg-slate-800 text-yellow-500 font-bold rounded hover:bg-slate-700 shadow-md">M</button>
+                        <button onclick="addRoman('D')" class="w-10 h-10 bg-slate-800 text-white font-bold rounded hover:bg-slate-700 shadow-md">D</button>
+                        <button onclick="addRoman('C')" class="w-10 h-10 bg-slate-800 text-white font-bold rounded hover:bg-slate-700 shadow-md">C</button>
+                        <button onclick="addRoman('L')" class="w-10 h-10 bg-slate-800 text-white font-bold rounded hover:bg-slate-700 shadow-md">L</button>
+                        <button onclick="addRoman('X')" class="w-10 h-10 bg-slate-800 text-white font-bold rounded hover:bg-slate-700 shadow-md">X</button>
+                        <button onclick="addRoman('V')" class="w-10 h-10 bg-slate-800 text-white font-bold rounded hover:bg-slate-700 shadow-md">V</button>
+                        <button onclick="addRoman('I')" class="w-10 h-10 bg-slate-800 text-white font-bold rounded hover:bg-slate-700 shadow-md">I</button>
+                        <button onclick="backspaceRoman()" class="w-10 h-10 bg-red-100 text-red-600 rounded hover:bg-red-200"><i class="fa-solid fa-delete-left"></i></button>
+                    </div>
+
+                    <div class="flex gap-2 justify-center">
+                        <button onclick="checkRomanAnswer()" class="bg-roman text-white px-6 py-2 rounded font-bold shadow hover:bg-red-800">COMBATIR</button>
+                        <button onclick="initRomanGame()" class="bg-slate-300 text-slate-600 px-4 py-2 rounded hover:bg-slate-400"><i class="fa-solid fa-rotate"></i></button>
+                    </div>
+                    <p id="gameFeedback" class="mt-2 font-bold h-6"></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="ancient-card rounded-2xl overflow-hidden border-t-8 border-egypt">
+            <div class="bg-egypt p-4 flex justify-between items-center text-slate-900">
+                <h3 class="font-heading text-2xl font-bold"><i class="fa-solid fa-pyramid mr-2"></i> EGIPTO</h3>
+                <span class="bg-white/50 px-3 py-1 rounded text-xs font-bold">Jeroglíficos</span>
+            </div>
+            
+            <div class="grid md:grid-cols-2">
+                <div class="p-8 border-r border-egypt/20 flex flex-col justify-center items-center">
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Traducción</p>
+                    <div id="egyptOutput" class="flex flex-wrap justify-center gap-1 items-end min-h-[60px]">...</div>
+                </div>
+                
+                <div class="p-6 bg-egypt/10 text-sm">
+                    <h4 class="font-bold mb-3 text-egypt border-b border-egypt/30 pb-1">Símbolos Sagrados</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center gap-3"><span class="w-8 text-center text-xl font-bold">|</span> <span><strong>1</strong> (Vara)</span></li>
+                        <li class="flex items-center gap-3"><span class="w-8 text-center text-xl font-bold">∩</span> <span><strong>10</strong> (Talón)</span></li>
+                        <li class="flex items-center gap-3"><span class="w-8 text-center text-xl font-bold">꩜</span> <span><strong>100</strong> (Cuerda)</span></li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-leaf text-egypt w-8 text-center"></i> <span><strong>1000</strong> (Flor de Loto)</span></li>
+                    </ul>
+                    <p class="mt-3 text-xs italic text-slate-600">Es un sistema aditivo: ¡Solo sumas los dibujos!</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="ancient-card rounded-2xl overflow-hidden border-t-8 border-maya">
+            <div class="bg-maya p-4 flex justify-between items-center text-white">
+                <h3 class="font-heading text-2xl font-bold"><i class="fa-solid fa-sun mr-2"></i> MAYAS</h3>
+                <span class="bg-black/20 px-3 py-1 rounded text-xs font-bold">Vigesimal</span>
+            </div>
+            
+            <div class="grid md:grid-cols-2">
+                <div class="p-8 border-r border-maya/20 flex flex-col justify-center items-center bg-slate-900">
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-4">Glifo Vertical</p>
+                    <div id="mayaOutput" class="space-y-2">...</div>
+                </div>
+                
+                <div class="p-6 bg-maya/10 text-sm">
+                    <h4 class="font-bold mb-3 text-green-700 border-b border-maya/30 pb-1">Matemática de la Selva</h4>
+                    <div class="flex justify-around text-center mb-4">
+                        <div>
+                            <div class="maya-dot mb-1"></div>
+                            <span class="block font-bold">1</span>
+                        </div>
+                        <div>
+                            <div class="maya-bar mb-1 !w-8"></div>
+                            <span class="block font-bold">5</span>
+                        </div>
+                        <div>
+                            <div class="maya-shell mb-1 scale-75"></div>
+                            <span class="block font-bold">0</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-700">
+                        Los mayas escriben de abajo hacia arriba. <br>
+                        <strong>Nivel 1:</strong> Vale x1.<br>
+                        <strong>Nivel 2:</strong> Vale x20.<br>
+                        <strong>Nivel 3:</strong> Vale x400.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="ancient-card rounded-2xl overflow-hidden border-t-8 border-china">
+            <div class="bg-china p-4 flex justify-between items-center text-white">
+                <h3 class="font-chinese text-2xl font-bold"><i class="fa-solid fa-dragon mr-2"></i> CHINA</h3>
+                <span class="bg-black/20 px-3 py-1 rounded text-xs font-bold">Multiplicativo</span>
+            </div>
+            
+            <div class="grid md:grid-cols-2">
+                <div class="p-8 border-r border-china/20 flex flex-col justify-center items-center">
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Ideogramas</p>
+                    <div id="chinaOutput" class="font-chinese text-5xl text-red-600 font-bold">...</div>
+                </div>
+                
+                <div class="p-6 bg-china/5 text-sm">
+                    <h4 class="font-bold mb-3 text-red-700 border-b border-china/30 pb-1">Caracteres Hanzi</h4>
+                    <div class="grid grid-cols-5 gap-2 text-center font-chinese text-lg text-slate-700 mb-3">
+                        <div>一<br><span class="text-xs font-sans">1</span></div>
+                        <div>二<br><span class="text-xs font-sans">2</span></div>
+                        <div>三<br><span class="text-xs font-sans">3</span></div>
+                        <div>四<br><span class="text-xs font-sans">4</span></div>
+                        <div>五<br><span class="text-xs font-sans">5</span></div>
+                        <div>六<br><span class="text-xs font-sans">6</span></div>
+                        <div>七<br><span class="text-xs font-sans">7</span></div>
+                        <div>八<br><span class="text-xs font-sans">8</span></div>
+                        <div>九<br><span class="text-xs font-sans">9</span></div>
+                        <div>十<br><span class="text-xs font-sans">10</span></div>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2">
+                        Se multiplica por la unidad: <br>
+                        20 = 二 (2) + 十 (10). <br>
+                        100 = 百 (Bai).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // --- SVG STRINGS PARA EGIPCIOS ---
+        const svgStroke = `<svg viewBox="0 0 10 40" class="egypt-icon w-3"><line x1="5" y1="5" x2="5" y2="35" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`;
+        const svgHeel = `<svg viewBox="0 0 30 40" class="egypt-icon w-5"><path d="M5,35 V15 Q5,5 15,5 Q25,5 25,15 V35" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`;
+        const svgCoil = `<svg viewBox="0 0 40 40" class="egypt-icon w-6"><path d="M25,30 Q35,30 35,20 Q35,10 20,10 Q10,10 10,25 Q10,35 30,35" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`;
+        const svgLotus = `<svg viewBox="0 0 40 40" class="egypt-icon w-6"><path d="M20,35 V15 M10,15 L20,5 L30,15" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M10,35 H30" stroke="currentColor" stroke-width="3"/></svg>`;
+
+        function convertAll() {
+            const input = document.getElementById('mainInput');
+            let val = parseInt(input.value);
+            if (isNaN(val) || val < 1) { clearOutputs(); return; }
+            if (val > 3999) { val = 3999; input.value = 3999; }
+
+            updateRoman(val);
+            updateEgyptian(val);
+            updateMayan(val);
+            updateChinese(val);
+        }
+
+        function clearOutputs() {
+            document.getElementById('romanOutput').innerHTML = '...';
+            document.getElementById('romanExplanation').innerText = '';
+            document.getElementById('egyptOutput').innerHTML = '...';
+            document.getElementById('mayaOutput').innerHTML = '...';
+            document.getElementById('chinaOutput').innerHTML = '...';
+        }
+
+        // --- ROMANOS ---
+        function updateRoman(num) {
+            const romanValues = [
+                {val:1000, char:'M', exp:'1000'}, {val:900, char:'CM', exp:'(1000-100)'},
+                {val:500, char:'D', exp:'500'}, {val:400, char:'CD', exp:'(500-100)'},
+                {val:100, char:'C', exp:'100'}, {val:90, char:'XC', exp:'(100-10)'},
+                {val:50, char:'L', exp:'50'}, {val:40, char:'XL', exp:'(50-10)'},
+                {val:10, char:'X', exp:'10'}, {val:9, char:'IX', exp:'(10-1)'},
+                {val:5, char:'V', exp:'5'}, {val:4, char:'IV', exp:'(5-1)'},
+                {val:1, char:'I', exp:'1'}
+            ];
+            let result = '';
+            let explanation = [];
+            let tempNum = num;
+            for (let item of romanValues) {
+                while (tempNum >= item.val) {
+                    result += item.char;
+                    tempNum -= item.val;
+                    if(item.char.length > 1) explanation.push(item.exp);
+                }
+            }
+            document.getElementById('romanOutput').innerText = result;
+            if(explanation.length > 0) {
+                document.getElementById('romanExplanation').innerText = "Resta: " + explanation.join(', ');
+            } else {
+                document.getElementById('romanExplanation').innerText = "";
+            }
+        }
+
+        // --- EGIPCIOS ---
+        function updateEgyptian(num) {
+            let html = '';
+            const thousands = Math.floor(num / 1000);
+            for(let i=0; i<thousands; i++) html += svgLotus;
+            const hundreds = Math.floor((num % 1000) / 100);
+            for(let i=0; i<hundreds; i++) html += svgCoil;
+            const tens = Math.floor((num % 100) / 10);
+            for(let i=0; i<tens; i++) html += svgHeel;
+            const ones = num % 10;
+            for(let i=0; i<ones; i++) html += svgStroke;
+            document.getElementById('egyptOutput').innerHTML = html;
+        }
+
+        // --- MAYAS ---
+        function updateMayan(num) {
+            if(num === 0) return;
+            let levels = [];
+            let temp = num;
+            while (temp > 0) { levels.push(temp % 20); temp = Math.floor(temp / 20); }
+            
+            let html = '';
+            for (let i = levels.length - 1; i >= 0; i--) {
+                const value = levels[i];
+                const power = Math.pow(20, i);
+                let groupHtml = `<div class="bg-slate-800 p-2 rounded w-24 border border-maya mb-1 flex flex-col items-center justify-center relative">`;
+                groupHtml += `<span class="absolute -left-8 text-xs text-slate-500">x${power}</span>`;
+                if (value === 0) {
+                    groupHtml += `<div class="maya-shell scale-75"></div>`;
+                } else {
+                    const bars = Math.floor(value / 5);
+                    const dots = value % 5;
+                    if (dots > 0) {
+                        groupHtml += '<div class="flex justify-center mb-1">';
+                        for(let d=0; d<dots; d++) groupHtml += `<div class="maya-dot"></div>`;
+                        groupHtml += '</div>';
+                    }
+                    for(let b=0; b<bars; b++) groupHtml += `<div class="maya-bar !w-12 !h-2"></div>`;
+                }
+                groupHtml += `</div>`;
+                html += groupHtml;
+            }
+            document.getElementById('mayaOutput').innerHTML = html;
+        }
+
+        // --- CHINOS (NUEVO) ---
+        function updateChinese(num) {
+            const digits = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+            const units = ['', '十', '百', '千'];
+            let str = num.toString();
+            let result = '';
+            let len = str.length;
+
+            for (let i = 0; i < len; i++) {
+                let digit = parseInt(str[i]);
+                let pos = len - 1 - i;
+                
+                if (digit !== 0) {
+                    // Caso especial: 10 a 19, no se dice "Un Diez", solo "Diez"
+                    if(pos === 1 && digit === 1 && len === 2) {
+                        result += units[pos];
+                    } else {
+                        result += digits[digit] + units[pos];
+                    }
+                } else {
+                    // Manejo de ceros intermedios (simplificado)
+                    if (pos > 0 && str[i+1] !== '0') {
+                        result += digits[0]; 
+                    }
+                }
+            }
+            document.getElementById('chinaOutput').innerText = result;
+        }
+
+        // --- JUEGO ROMANO ---
+        let targetNum = 0;
+        let playerString = "";
+        
+        function initRomanGame() {
+            targetNum = Math.floor(Math.random() * 89) + 1;
+            playerString = "";
+            document.getElementById('targetNumber').innerText = targetNum;
+            document.getElementById('playerBuild').innerText = "";
+            document.getElementById('gameFeedback').innerText = "";
+        }
+        function addRoman(c) { playerString += c; document.getElementById('playerBuild').innerText = playerString; }
+        function backspaceRoman() { playerString = playerString.slice(0, -1); document.getElementById('playerBuild').innerText = playerString; }
+        
+        function checkRomanAnswer() {
+            // Recalculamos el romano correcto
+            let correct = "";
+            const vals = [{v:1000,c:'M'},{v:900,c:'CM'},{v:500,c:'D'},{v:400,c:'CD'},{v:100,c:'C'},{v:90,c:'XC'},{v:50,c:'L'},{v:40,c:'XL'},{v:10,c:'X'},{v:9,c:'IX'},{v:5,c:'V'},{v:4,c:'IV'},{v:1,c:'I'}];
+            let n = targetNum;
+            for(let o of vals) { while(n >= o.v) { correct += o.c; n -= o.v; } }
+            
+            if(playerString === correct) {
+                document.getElementById('gameFeedback').innerHTML = "<span class='text-green-600'>¡Correcto!</span>";
+                setTimeout(initRomanGame, 1500);
+            } else {
+                document.getElementById('gameFeedback').innerHTML = "<span class='text-red-600'>Intenta de nuevo</span>";
+            }
+        }
+
+        initRomanGame();
+    </script>
+</body>
+</html>
