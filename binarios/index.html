@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Aventura Binaria! | I.E. Paulo VI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600;700&family=Nunito:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .fun-font { font-family: 'Fredoka', sans-serif; }
+        .tech-font { font-family: 'Share Tech Mono', monospace; }
+        
+        /* Animación suave para las tarjetas */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .switch-container {
+            perspective: 1000px;
+        }
+        
+        .switch-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        }
+        
+        .switch-btn:active { transform: scale(0.95); }
+        .switch-btn.active {
+            background: #22c55e;
+            box-shadow: 0 0 15px #22c55e;
+            border-color: #4ade80;
+        }
+
+        /* Bombilla Interactiva */
+        .bulb {
+            font-size: 3rem;
+            filter: grayscale(100%) opacity(0.5);
+            transition: all 0.3s;
+            cursor: pointer;
+            text-shadow: none;
+        }
+        .bulb.on {
+            filter: grayscale(0%) opacity(1);
+            text-shadow: 0 0 30px #fbbf24;
+            transform: scale(1.1);
+        }
+
+        /* Animaciones */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            z-index: 100;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <nav class="bg-slate-900/80 border-b border-white/10 sticky top-0 z-50 backdrop-blur-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-microchip text-cyan-400 text-2xl"></i>
+                <div>
+                    <h1 class="fun-font font-bold text-lg md:text-xl text-white leading-none">Aventura Binaria</h1>
+                    <p class="text-xs text-slate-400">Matemáticas 6° | I.E. Paulo VI</p>
+                </div>
+            </div>
+            <a href="https://github.com/lumcab/Matematicas" target="_blank" class="text-slate-400 hover:text-white transition-colors">
+                <i class="fa-brands fa-github text-xl"></i>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 space-y-12 max-w-6xl">
+
+        <header class="text-center relative py-8">
+            <div class="animate-float text-6xl md:text-8xl mb-4">🤖</div>
+            <h1 class="fun-font text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
+                El Código Secreto
+            </h1>
+            <p class="text-xl text-blue-200 max-w-2xl mx-auto">
+                Las computadoras no hablan español ni inglés. Ellas hablan con <strong>electricidad</strong>: 
+                <span class="text-yellow-400 font-bold">Encendido (1)</span> o <span class="text-slate-400 font-bold">Apagado (0)</span>.
+            </p>
+        </header>
+
+        <section class="glass-panel rounded-3xl p-6 md:p-8 border-t-4 border-cyan-500">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="fun-font text-2xl md:text-3xl font-bold text-white">🎛️ Laboratorio de Bits</h2>
+                <div class="bg-slate-900 px-4 py-2 rounded-lg border border-slate-700">
+                    <span class="text-slate-400 text-sm mr-2">Valor Decimal:</span>
+                    <span id="decimalDisplay" class="tech-font text-3xl font-bold text-yellow-400">0</span>
+                </div>
+            </div>
+            
+            <p class="text-center text-slate-300 mb-6">¡Toca los interruptores! Recuerda: cada posición vale el <strong>doble</strong> que la anterior.</p>
+
+            <div class="overflow-x-auto pb-4">
+                <div class="flex justify-center min-w-max gap-2 md:gap-4 px-2">
+                    <div class="flex flex-col items-center gap-2 group">
+                        <span class="text-xs text-slate-500 font-bold">128</span>
+                        <button onclick="toggleBit(128, this)" class="switch-btn w-12 h-20 md:w-16 md:h-24 bg-slate-800 rounded-lg border-b-4 border-slate-950 flex flex-col items-center justify-end pb-2 relative overflow-hidden">
+                            <div class="absolute top-2 w-2 h-2 rounded-full bg-red-500 status-light transition-colors"></div>
+                            <span class="tech-font text-xl md:text-2xl font-bold text-slate-600 bit-val">0</span>
+                        </button>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 group">
+                        <span class="text-xs text-slate-500 font-bold">64</span>
+                        <button onclick="toggleBit(64, this)" class="switch-btn w-12 h-20 md:w-16 md:h-24 bg-slate-800 rounded-lg border-b-4 border-slate-950 flex flex-col items-center justify-end pb-2 relative overflow-hidden">
+                            <div class="absolute top-2 w-2 h-2 rounded-full bg-red-500 status-light transition-colors"></div>
+                            <span class="tech-font text-xl md:text-2xl font-bold text-slate-600 bit-val">0</span>
+                        </button>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 group">
+                        <span class="text-xs text-slate-500 font-bold">32</span>
+                        <button onclick="toggleBit(32, this)" class="switch-btn w-12 h-20 md:w-16 md:h-24 bg-slate-800 rounded-lg border-b-4 border-slate-950 flex flex-col items-center justify-end pb-2 relative overflow-hidden">
+                            <div class="absolute top-2 w-2 h-2 rounded-full bg-red-500 status-light transition-colors"></div>
+                            <span class="tech-font text-xl md:text-2xl font-bold text-slate-600 bit-val">0</span>
+                        </button>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 group">
+                        <span class="text-xs text-slate-500 font-bold">16</span>
+                        <button onclick="toggleBit(16, this)" class="switch-btn w-12 h-20 md:w-16 md:h-24 bg-slate-800 rounded-lg border-b-4 border-slate-950 flex flex-col items-center justify-end pb-2 relative overflow-hidden">
+                            <div class="absolute top-2 w-2 h-2 rounded-full bg-red-500 status-light transition-colors"></div>
+                            <span class="tech-font text-xl md:text-2xl font-bold text-slate-600 bit-val">0</span>
+                        </button>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 group">
+                        <span class="text-xs text-slate-500 font-bold">8</span>
+                        <button onclick="toggleBit(8, this)" class="switch-btn w-12 h-20 md:w-16 md:h-24 bg-slate-800 rounded-lg border-b-4 border-slate-950 flex flex-col items-center justify-end pb-2 relative overflow-hidden">
+                            <div class="absolute top-2 w-2 h-2 rounded-full bg-red-500 status-light transition-colors"></div>
+                            <span class="tech-font text-xl md:text-2xl font-bold text-slate-600 bit-val">0</span>
+                        </button>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 group">
+                        <span class="text-xs text-slate-500 font-bold">4</span>
+                        <button onclick="toggleBit(4, this)" class="switch-btn w-12 h-20 md:w-16 md:h-24 bg-slate-800 rounded-lg border-b-4 border-slate-950 flex flex-col items-center justify-end pb-2 relative overflow-hidden">
+                            <div class="absolute top-2 w-2 h-2 rounded-full bg-red-500 status-light transition-colors"></div>
+                            <span class="tech-font text-xl md:text-2xl font-bold text-slate-600 bit-val">0</span>
+                        </button>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 group">
+                        <span class="text-xs text-slate-500 font-bold">2</span>
+                        <button onclick="toggleBit(2, this)" class="switch-btn w-12 h-20 md:w-16 md:h-24 bg-slate-800 rounded-lg border-b-4 border-slate-950 flex flex-col items-center justify-end pb-2 relative overflow-hidden">
+                            <div class="absolute top-2 w-2 h-2 rounded-full bg-red-500 status-light transition-colors"></div>
+                            <span class="tech-font text-xl md:text-2xl font-bold text-slate-600 bit-val">0</span>
+                        </button>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 group">
+                        <span class="text-xs text-yellow-400 font-bold">1</span>
+                        <button onclick="toggleBit(1, this)" class="switch-btn w-12 h-20 md:w-16 md:h-24 bg-slate-800 rounded-lg border-b-4 border-slate-950 flex flex-col items-center justify-end pb-2 relative overflow-hidden ring-2 ring-yellow-500/50">
+                            <div class="absolute top-2 w-2 h-2 rounded-full bg-red-500 status-light transition-colors"></div>
+                            <span class="tech-font text-xl md:text-2xl font-bold text-slate-600 bit-val">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-slate-900/50 rounded-xl p-4 text-center border border-white/10">
+                <p id="mathSteps" class="text-slate-400 font-mono text-sm md:text-base">0 = 0</p>
+            </div>
+        </section>
+
+        <div class="grid md:grid-cols-2 gap-8">
+            <section class="glass-panel rounded-3xl p-6 border-t-4 border-pink-500">
+                <h3 class="fun-font text-xl font-bold mb-4 flex items-center gap-2">
+                    <span class="bg-pink-500 text-xs px-2 py-1 rounded text-white">DEC</span>
+                    <i class="fa-solid fa-arrow-right text-slate-400"></i>
+                    <span class="bg-cyan-500 text-xs px-2 py-1 rounded text-white">BIN</span>
+                </h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs text-slate-400 uppercase font-bold">Número Decimal (0-255)</label>
+                        <input type="number" id="inputDec" placeholder="Ej: 42" oninput="convertDecToBin()" 
+                               class="w-full bg-slate-800 border border-slate-600 rounded-xl p-3 text-white focus:outline-none focus:border-pink-500 transition-colors font-bold text-lg">
+                    </div>
+                    
+                    <div class="bg-slate-900 rounded-xl p-4 text-center">
+                        <span class="block text-xs text-slate-500 mb-1">En binario es:</span>
+                        <span id="outputBin" class="tech-font text-3xl text-cyan-400 tracking-widest">00000000</span>
+                    </div>
+
+                    <div id="stepsDecToBin" class="text-xs text-slate-400 font-mono space-y-1 max-h-32 overflow-y-auto custom-scrollbar">
+                        </div>
+                </div>
+            </section>
+
+            <section class="glass-panel rounded-3xl p-6 border-t-4 border-green-500">
+                <h3 class="fun-font text-xl font-bold mb-4 flex items-center gap-2">
+                    <span class="bg-cyan-500 text-xs px-2 py-1 rounded text-white">BIN</span>
+                    <i class="fa-solid fa-arrow-right text-slate-400"></i>
+                    <span class="bg-pink-500 text-xs px-2 py-1 rounded text-white">DEC</span>
+                </h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs text-slate-400 uppercase font-bold">Número Binario (8 bits)</label>
+                        <input type="text" id="inputBin" placeholder="Ej: 00101010" maxlength="8" oninput="convertBinToDec()" 
+                               class="w-full bg-slate-800 border border-slate-600 rounded-xl p-3 text-white focus:outline-none focus:border-green-500 transition-colors font-mono tracking-widest text-lg">
+                    </div>
+                    
+                    <div class="bg-slate-900 rounded-xl p-4 text-center">
+                        <span class="block text-xs text-slate-500 mb-1">En decimal es:</span>
+                        <span id="outputDec" class="tech-font text-3xl text-pink-400 font-bold">0</span>
+                    </div>
+
+                    <div id="stepsBinToDec" class="text-center text-sm text-yellow-300 font-mono">
+                        </div>
+                </div>
+            </section>
+        </div>
+
+        <section class="glass-panel rounded-3xl p-8 relative overflow-hidden bg-gradient-to-br from-indigo-900 to-purple-900 border border-purple-500/30">
+            <div class="absolute top-0 right-0 p-4 opacity-10 text-9xl">🎮</div>
+            
+            <div class="relative z-10 text-center">
+                <h2 class="fun-font text-3xl font-bold mb-2 text-white">¡Desafío Binario!</h2>
+                <p class="text-purple-200 mb-6">¿Qué número decimal representa este código?</p>
+                
+                <div class="bg-slate-950 inline-block px-8 py-4 rounded-xl mb-8 border-2 border-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+                    <span id="gameQuestion" class="tech-font text-4xl md:text-5xl text-white tracking-widest">00000000</span>
+                </div>
+
+                <div id="gameOptions" class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+                    </div>
+
+                <div class="mt-8 flex justify-between items-center bg-black/20 p-4 rounded-xl">
+                    <div class="text-left">
+                        <span class="block text-xs text-slate-400">Puntaje</span>
+                        <span id="score" class="text-2xl font-bold text-yellow-400">0</span>
+                    </div>
+                    <div id="feedback" class="font-bold text-lg"></div>
+                    <button onclick="initGame()" class="text-xs bg-white/10 hover:bg-white/20 px-3 py-1 rounded transition-colors">
+                        Saltar <i class="fa-solid fa-forward"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="text-center py-8">
+            <h2 class="fun-font text-2xl font-bold mb-4">🎂 Tu Edad en Binario</h2>
+            <div class="inline-flex items-center gap-4 bg-slate-800 p-2 rounded-full pr-6 border border-slate-600">
+                <input type="number" id="ageInput" value="11" min="1" max="99" oninput="calcAge()" 
+                       class="w-16 h-12 rounded-full bg-slate-700 text-center font-bold text-xl focus:outline-none focus:bg-slate-600">
+                <span class="text-xl">años =</span>
+                <span id="ageResult" class="tech-font text-2xl text-cyan-400 font-bold tracking-wider">00001011</span>
+            </div>
+            <p class="mt-2 text-slate-400 text-sm">¡Intenta poner la edad de tus papás!</p>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-950 py-6 text-center border-t border-slate-900 text-slate-500 text-sm">
+        <p>Desarrollado para el Grado Sexto | I.E. Paulo VI</p>
+    </footer>
+
+    <script>
+        // --- 1. LÓGICA DE INTERRUPTORES ---
+        let totalValue = 0;
+
+        function toggleBit(val, btn) {
+            const isActive = btn.classList.contains('active');
+            const light = btn.querySelector('.status-light');
+            const text = btn.querySelector('.bit-val');
+            
+            if (isActive) {
+                // Apagar
+                btn.classList.remove('active');
+                light.classList.remove('bg-green-400', 'shadow-[0_0_10px_#4ade80]');
+                light.classList.add('bg-red-500');
+                text.textContent = '0';
+                text.classList.remove('text-white');
+                text.classList.add('text-slate-600');
+                totalValue -= val;
+            } else {
+                // Encender
+                btn.classList.add('active');
+                light.classList.remove('bg-red-500');
+                light.classList.add('bg-green-400', 'shadow-[0_0_10px_#4ade80]');
+                text.textContent = '1';
+                text.classList.remove('text-slate-600');
+                text.classList.add('text-white');
+                totalValue += val;
+            }
+
+            // Actualizar Display Decimal
+            const display = document.getElementById('decimalDisplay');
+            display.innerText = totalValue;
+            
+            // Animación pequeña al cambiar número
+            display.classList.remove('scale-125');
+            void display.offsetWidth; // trigger reflow
+            display.classList.add('scale-125', 'transition-transform');
+            setTimeout(() => display.classList.remove('scale-125'), 200);
+
+            updateMathSteps();
+        }
+
+        function updateMathSteps() {
+            // Generar la suma visual (Ej: 32 + 8 + 1 = 41)
+            const activeBits = [];
+            const buttons = document.querySelectorAll('.switch-btn');
+            const values = [128, 64, 32, 16, 8, 4, 2, 1];
+            
+            buttons.forEach((btn, index) => {
+                if (btn.classList.contains('active')) {
+                    activeBits.push(values[index]);
+                }
+            });
+
+            const stepDisplay = document.getElementById('mathSteps');
+            if (activeBits.length === 0) {
+                stepDisplay.innerText = "0 = 0 (Todo apagado)";
+            } else {
+                stepDisplay.innerHTML = activeBits.join(' + ') + ` = <span class="text-yellow-400 font-bold text-lg">${totalValue}</span>`;
+            }
+        }
+
+        // --- 2. CONVERSORES ---
+        function convertDecToBin() {
+            const input = document.getElementById('inputDec');
+            const output = document.getElementById('outputBin');
+            const stepsDiv = document.getElementById('stepsDecToBin');
+            
+            let val = parseInt(input.value);
+            if (isNaN(val) || val < 0) val = 0;
+            if (val > 255) val = 255; // Limite de 8 bits para simplificar
+
+            // Convertir
+            const binary = val.toString(2).padStart(8, '0');
+            output.innerText = binary;
+
+            // Generar pasos (Divisiones sucesivas)
+            let stepsHTML = '';
+            let temp = val;
+            if(temp === 0) stepsHTML = '0 ÷ 2 = 0';
+            
+            while(temp > 0) {
+                let remainder = temp % 2;
+                let quotient = Math.floor(temp / 2);
+                stepsHTML += `<div class="flex justify-between border-b border-white/5 pb-1"><span>${temp} ÷ 2 = ${quotient}</span> <span class="text-yellow-400 font-bold">Resto: ${remainder}</span></div>`;
+                temp = quotient;
+            }
+            stepsDiv.innerHTML = stepsHTML;
+        }
+
+        function convertBinToDec() {
+            const input = document.getElementById('inputBin');
+            const output = document.getElementById('outputDec');
+            const stepsDiv = document.getElementById('stepsBinToDec');
+
+            // Limpiar input (solo 0 y 1)
+            let val = input.value.replace(/[^01]/g, '');
+            input.value = val;
+
+            if (!val) {
+                output.innerText = 0;
+                stepsDiv.innerText = "";
+                return;
+            }
+
+            const decimal = parseInt(val, 2);
+            output.innerText = decimal;
+
+            // Visualizar suma
+            let sumParts = [];
+            const len = val.length;
+            for(let i=0; i<len; i++) {
+                if(val[i] === '1') {
+                    // Calcular potencia: 2^(posición desde la derecha)
+                    let power = Math.pow(2, len - 1 - i);
+                    sumParts.push(power);
+                }
+            }
+            stepsDiv.innerHTML = sumParts.length > 0 ? sumParts.join(' + ') + ' = ' + decimal : '0';
+        }
+
+        // --- 3. JUEGO ---
+        let currentTarget = 0;
+        let score = 0;
+
+        function initGame() {
+            // Generar número random (0-255)
+            currentTarget = Math.floor(Math.random() * 255) + 1;
+            const binaryString = currentTarget.toString(2).padStart(8, '0');
+            
+            document.getElementById('gameQuestion').innerText = binaryString;
+            document.getElementById('feedback').innerText = "";
+            
+            // Generar opciones
+            let options = [currentTarget];
+            while(options.length < 4) {
+                let r = Math.floor(Math.random() * 255) + 1;
+                if(!options.includes(r)) options.push(r);
+            }
+            // Mezclar
+            options.sort(() => Math.random() - 0.5);
+
+            // Renderizar botones
+            const container = document.getElementById('gameOptions');
+            container.innerHTML = '';
+            
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white/10 hover:bg-white/20 text-white font-bold py-3 rounded-xl transition-all border border-white/10 text-xl";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(ans, btnElement) {
+            const feedback = document.getElementById('feedback');
+            
+            if(ans === currentTarget) {
+                // Correcto
+                btnElement.classList.remove('bg-white/10');
+                btnElement.classList.add('bg-green-500', 'border-green-400');
+                feedback.innerHTML = '<span class="text-green-400"><i class="fa-solid fa-check"></i> ¡Correcto!</span>';
+                score += 10;
+                document.getElementById('score').innerText = score;
+                throwConfetti();
+                setTimeout(initGame, 1500);
+            } else {
+                // Incorrecto
+                btnElement.classList.add('bg-red-500/50', 'shake');
+                feedback.innerHTML = '<span class="text-red-400">Intenta de nuevo</span>';
+                score = Math.max(0, score - 5);
+                document.getElementById('score').innerText = score;
+            }
+        }
+
+        function throwConfetti() {
+            for(let i=0; i<30; i++) {
+                const conf = document.createElement('div');
+                conf.classList.add('confetti');
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.backgroundColor = ['#f472b6', '#22d3ee', '#fbbf24'][Math.floor(Math.random()*3)];
+                conf.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                document.body.appendChild(conf);
+                setTimeout(() => conf.remove(), 3000);
+            }
+        }
+
+        // --- 4. EDAD ---
+        function calcAge() {
+            const val = document.getElementById('ageInput').value;
+            const res = document.getElementById('ageResult');
+            if(val) {
+                res.innerText = parseInt(val).toString(2).padStart(8, '0');
+            }
+        }
+
+        // Inicializar
+        initGame();
+        calcAge();
+
+    </script>
+</body>
+</html>
