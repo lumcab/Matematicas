@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistemas Numéricos: Viaje a Través de las Civilizaciones</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=Noto+Sans+Egyptian+Hieroglyphs&family=Crimson+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        body {
+            font-family: 'Crimson Text', serif;
+            background: #0f172a;
+            overflow-x: hidden;
+        }
+        
+        .papyrus-bg {
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 69, 19, 0.03) 2px, rgba(139, 69, 19, 0.03) 4px),
+                linear-gradient(to bottom, #f4e4bc, #e6d5a7);
+            box-shadow: inset 0 0 100px rgba(139, 69, 19, 0.1);
+        }
+        
+        .stone-texture {
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            position: relative;
+        }
+        
+        .stone-texture::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        .jade-bg {
+            background: 
+                radial-gradient(ellipse at top, #065f46, #064e3b),
+                linear-gradient(to bottom, #047857, #065f46);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .jade-bg::after {
+            content: '';
+            position: absolute;
+            inset: -50%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.03) 10px,
+                rgba(255,255,255,0.03) 20px
+            );
+            animation: shimmer 20s linear infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .maya-bg {
+            background: 
+                linear-gradient(135deg, #92400e 0%, #78350f 50%, #451a03 100%);
+            position: relative;
+        }
+        
+        .maya-pattern {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(251, 191, 36, 0.1) 50px, rgba(251, 191, 36, 0.1) 52px),
+                repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(251, 191, 36, 0.1) 50px, rgba(251, 191, 36, 0.1) 52px);
+            opacity: 0.3;
+        }
+        
+        .binary-bg {
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .binary-rain {
+            position: absolute;
+            inset: 0;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 14px;
+            color: rgba(0, 255, 0, 0.1);
+            line-height: 1.5;
+            overflow: hidden;
+            white-space: pre;
+            pointer-events: none;
+        }
+        
+        .hieroglyph {
+            font-family: 'Noto Sans Egyptian Hieroglyphs', sans-serif;
+        }
+        
+        .roman-font {
+            font-family: 'Cinzel', serif;
+        }
+        
+        .chinese-font {
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+        
+        .number-display {
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .calculation-step {
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: slideIn 0.5s forwards;
+        }
+        
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
+        }
+        
+        .scroll-indicator {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+        
+        .timeline-line {
+            background: linear-gradient(to right, #fbbf24, #f59e0b, #d97706);
+            height: 4px;
+            position: relative;
+        }
+        
+        .timeline-line::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: -8px;
+            width: 0;
+            height: 0;
+            border-left: 20px solid #f59e0b;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <!-- Header -->
+    <header class="relative bg-slate-900 text-amber-50 py-12 overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 20% 50%, #fbbf24 0%, transparent 50%), radial-gradient(circle at 80% 50%, #3b82f6 0%, transparent 50%);"></div>
+        </div>
+        <div class="container mx-auto px-6 relative z-10 text-center">
+            <h1 class="text-5xl md:text-7xl font-bold mb-4 tracking-tight" style="font-family: 'Cinzel', serif;">
+                Sistemas Numéricos
+            </h1>
+            <p class="text-xl md:text-2xl text-amber-200 font-light italic">
+                Un viaje a través de las civilizaciones: de los jeroglíficos al código binario
+            </p>
+            <div class="mt-8 flex justify-center items-center gap-4 text-sm text-slate-400">
+                <span class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
+                    Comparación con sistema decimal
+                </span>
+                <span>|</span>
+                <span>Ejemplos interactivos</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 space-y-16">
+
+        <!-- Introducción -->
+        <section class="bg-white rounded-2xl shadow-2xl p-8 md:p-12 border-l-8 border-amber-500">
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold mb-4 text-slate-800">¿Qué es un sistema numérico?</h2>
+                    <p class="text-lg text-slate-600 leading-relaxed mb-4">
+                        Un sistema numérico es un conjunto de símbolos y reglas utilizados para representar cantidades. 
+                        A lo largo de la historia, diferentes civilizaciones desarrollaron métodos únicos para contar y calcular, 
+                        reflejando su cultura, tecnología y necesidades matemáticas.
+                    </p>
+                    <div class="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                        <p class="text-amber-800 font-semibold">
+                            💡 Todos los ejemplos siguientes representan el número <span class="text-2xl font-bold text-amber-600">2,024</span> en diferentes sistemas.
+                        </p>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="bg-slate-100 p-4 rounded-lg">
+                            <div class="text-3xl font-bold text-slate-400">MMXXIV</div>
+                            <div class="text-sm text-slate-500 mt-1">Romano</div>
+                        </div>
+                        <div class="bg-slate-100 p-4 rounded-lg">
+                            <div class="text-3xl font-bold text-slate-400" style="font-family: 'Noto Sans SC';">二千二十四</div>
+                            <div class="text-sm text-slate-500 mt-1">Chino</div>
+                        </div>
+                        <div class="bg-slate-100 p-4 rounded-lg">
+                            <div class="text-3xl font-bold text-slate-400">11111101000</div>
+                            <div class="text-sm text-slate-500 mt-1">Binario</div>
+                        </div>
+                        <div class="bg-slate-100 p-4 rounded-lg">
+                            <div class="text-3xl font-bold text-slate-400">𓏻𓍢𓎆𓏽</div>
+                            <div class="text-sm text-slate-500 mt-1">Egipcio</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cards Grid -->
+        <div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
+
+            <!-- 1. Sistema Egipcio -->
+            <article class="card-hover rounded-2xl overflow-hidden shadow-2xl bg-white relative group">
+                <div class="h-2 bg-gradient-to-r from-yellow-600 via-yellow-500 to-amber-400"></div>
+                <div class="papyrus-bg p-8 h-full flex flex-col">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-amber-900" style="font-family: 'Cinzel', serif;">Egipcio</h3>
+                        <span class="text-4xl">𓂀</span>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <p class="text-amber-800 text-sm mb-4 italic">Sistema aditivo jeroglífico (c. 3000 a.C.)</p>
+                        <div class="grid grid-cols-4 gap-2 text-center text-2xl mb-4">
+                            <div class="bg-amber-100/50 p-2 rounded" title="1">𓏺</div>
+                            <div class="bg-amber-100/50 p-2 rounded" title="10">𓎆</div>
+                            <div class="bg-amber-100/50 p-2 rounded" title="100">𓍢</div>
+                            <div class="bg-amber-100/50 p-2 rounded" title="1000">𓆼</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/60 backdrop-blur rounded-xl p-6 mb-4 flex-grow border border-amber-900/20">
+                        <div class="text-center mb-4">
+                            <div class="text-5xl mb-2 tracking-widest text-amber-900" id="egyptian-display">
+                                𓆼𓆼 &nbsp; 𓍢 &nbsp; 𓎆𓎆 &nbsp; 𓏻𓏻𓏻𓏻
+                            </div>
+                            <div class="text-amber-700 font-semibold">Representación de 2,024</div>
+                        </div>
+                        
+                        <div class="space-y-2 text-sm text-amber-900">
+                            <div class="flex justify-between items-center border-b border-amber-900/10 pb-1">
+                                <span>𓆼𓆼 (2×1000)</span>
+                                <span class="font-bold">= 2,000</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-amber-900/10 pb-1">
+                                <span>𓍢 (1×100)</span>
+                                <span class="font-bold">= 100</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-amber-900/10 pb-1">
+                                <span>𓎆𓎆 (2×10)</span>
+                                <span class="font-bold">= 20</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-amber-900/10 pb-1">
+                                <span>𓏻𓏻𓏻𓏻 (4×1)</span>
+                                <span class="font-bold">= 4</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-2 text-lg font-bold text-amber-700">
+                                <span>Total</span>
+                                <span>2,024</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-xs text-amber-800/70 text-center">
+                        No tenían concepto de posición; se sumaban todos los símbolos
+                    </div>
+                </div>
+            </article>
+
+            <!-- 2. Sistema Romano -->
+            <article class="card-hover rounded-2xl overflow-hidden shadow-2xl bg-white relative group">
+                <div class="h-2 bg-gradient-to-r from-red-800 via-red-600 to-amber-600"></div>
+                <div class="stone-texture text-slate-100 p-8 h-full flex flex-col relative">
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-2xl font-bold roman-font">Romano</h3>
+                            <span class="text-4xl">🏛️</span>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <p class="text-slate-300 text-sm mb-4 italic">Sistema aditivo-sustractivo (c. 500 a.C.)</p>
+                            <div class="grid grid-cols-4 gap-2 text-center text-xl mb-4 bg-black/20 p-3 rounded-lg">
+                                <div class="text-red-400 font-bold">I<br><span class="text-xs text-slate-400">1</span></div>
+                                <div class="text-red-400 font-bold">V<br><span class="text-xs text-slate-400">5</span></div>
+                                <div class="text-red-400 font-bold">X<br><span class="text-xs text-slate-400">10</span></div>
+                                <div class="text-red-400 font-bold">L<br><span class="text-xs text-slate-400">50</span></div>
+                                <div class="text-red-400 font-bold">C<br><span class="text-xs text-slate-400">100</span></div>
+                                <div class="text-red-400 font-bold">D<br><span class="text-xs text-slate-400">500</span></div>
+                                <div class="text-red-400 font-bold">M<br><span class="text-xs text-slate-400">1000</span></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-800/50 backdrop-blur rounded-xl p-6 mb-4 flex-grow border border-slate-600">
+                            <div class="text-center mb-4">
+                                <div class="text-5xl mb-2 tracking-widest text-amber-400 roman-font font-bold" id="roman-display">
+                                    MMXXIV
+                                </div>
+                                <div class="text-slate-300 font-semibold">Representación de 2,024</div>
+                            </div>
+                            
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between items-center border-b border-slate-600 pb-1">
+                                    <span class="text-slate-300">MM (1000+1000)</span>
+                                    <span class="font-bold text-amber-400">= 2,000</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-slate-600 pb-1">
+                                    <span class="text-slate-300">XX (10+10)</span>
+                                    <span class="font-bold text-amber-400">= 20</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-slate-600 pb-1">
+                                    <span class="text-slate-300">IV (5-1)</span>
+                                    <span class="font-bold text-amber-400">= 4</span>
+                                </div>
+                                <div class="flex justify-between items-center pt-2 text-lg font-bold text-amber-400">
+                                    <span>Total</span>
+                                    <span>2,024</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-xs text-slate-400 text-center relative z-10">
+                            Regla: Si un símbolo menor precede a uno mayor, se resta (IV = 4)
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 3. Sistema Chino -->
+            <article class="card-hover rounded-2xl overflow-hidden shadow-2xl bg-white relative group">
+                <div class="h-2 bg-gradient-to-r from-red-700 via-red-500 to-amber-500"></div>
+                <div class="jade-bg text-amber-50 p-8 h-full flex flex-col relative">
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-2xl font-bold chinese-font">Chino</h3>
+                            <span class="text-4xl">🐉</span>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <p class="text-emerald-100 text-sm mb-4 italic">Sistema multiplicativo-posicional</p>
+                            <div class="grid grid-cols-4 gap-2 text-center text-lg mb-4 bg-black/20 p-3 rounded-lg">
+                                <div class="chinese-font">一<br><span class="text-xs text-emerald-200">1</span></div>
+                                <div class="chinese-font">二<br><span class="text-xs text-emerald-200">2</span></div>
+                                <div class="chinese-font">三<br><span class="text-xs text-emerald-200">3</span></div>
+                                <div class="chinese-font">十<br><span class="text-xs text-emerald-200">10</span></div>
+                                <div class="chinese-font">百<br><span class="text-xs text-emerald-200">100</span></div>
+                                <div class="chinese-font">千<br><span class="text-xs text-emerald-200">1000</span></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-emerald-900/40 backdrop-blur rounded-xl p-6 mb-4 flex-grow border border-emerald-500/30">
+                            <div class="text-center mb-4">
+                                <div class="text-4xl mb-2 tracking-widest text-amber-300 chinese-font font-bold" id="chinese-display">
+                                    二千二十四
+                                </div>
+                                <div class="text-emerald-100 font-semibold text-sm mt-2">Representación de 2,024</div>
+                            </div>
+                            
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between items-center border-b border-emerald-500/20 pb-1">
+                                    <span class="chinese-font text-emerald-100">二千 (2×1000)</span>
+                                    <span class="font-bold text-amber-300">= 2,000</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-emerald-500/20 pb-1">
+                                    <span class="chinese-font text-emerald-100">二十 (2×10)</span>
+                                    <span class="font-bold text-amber-300">= 20</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-emerald-500/20 pb-1">
+                                    <span class="chinese-font text-emerald-100">四 (4)</span>
+                                    <span class="font-bold text-amber-300">= 4</span>
+                                </div>
+                                <div class="flex justify-between items-center pt-2 text-lg font-bold text-amber-300">
+                                    <span>Total</span>
+                                    <span>2,024</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-xs text-emerald-200/70 text-center relative z-10">
+                            Multiplicativo: el dígito se multiplica por el valor de posición
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 4. Sistema Maya -->
+            <article class="card-hover rounded-2xl overflow-hidden shadow-2xl bg-white relative group lg:col-span-2 xl:col-span-1">
+                <div class="h-2 bg-gradient-to-r from-amber-700 via-amber-500 to-teal-600"></div>
+                <div class="maya-bg text-amber-100 p-8 h-full flex flex-col relative">
+                    <div class="maya-pattern"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-2xl font-bold" style="font-family: 'Cinzel', serif;">Maya</h3>
+                            <span class="text-4xl">🌞</span>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <p class="text-amber-200 text-sm mb-4 italic">Sistema vigesimal-posicional (base 20)</p>
+                            <div class="flex justify-center gap-4 text-center mb-4 bg-black/20 p-3 rounded-lg">
+                                <div>
+                                    <div class="text-2xl mb-1">•</div>
+                                    <div class="text-xs text-amber-300">1</div>
+                                </div>
+                                <div>
+                                    <div class="text-2xl mb-1">—</div>
+                                    <div class="text-xs text-amber-300">5</div>
+                                </div>
+                                <div>
+                                    <div class="text-2xl mb-1">𝍖</div>
+                                    <div class="text-xs text-amber-300">0</div>
+                                </div>
+                                <div class="text-xs text-amber-300 flex items-center">
+                                    (Posiciones: 1, 20, 400, 8000...)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-amber-900/40 backdrop-blur rounded-xl p-6 mb-4 flex-grow border border-amber-500/30">
+                            <div class="text-center mb-4">
+                                <div class="flex flex-col items-center gap-2 mb-2">
+                                    <div class="bg-amber-800/50 p-3 rounded-lg border border-amber-600">
+                                        <div class="text-3xl">••••</div>
+                                        <div class="text-xs text-amber-300">4 (unidades)</div>
+                                    </div>
+                                    <div class="text-amber-500 text-xs">↑</div>
+                                    <div class="bg-amber-800/50 p-3 rounded-lg border border-amber-600">
+                                        <div class="text-3xl">—<br>—</div>
+                                        <div class="text-xs text-amber-300">10 (veintenas)</div>
+                                    </div>
+                                    <div class="text-amber-500 text-xs">↑</div>
+                                    <div class="bg-amber-800/50 p-3 rounded-lg border border-amber-600">
+                                        <div class="text-3xl">—<br>—<br>—<br>—<br>—</div>
+                                        <div class="text-xs text-amber-300">5 (400s)</div>
+                                    </div>
+                                </div>
+                                <div class="text-amber-200 font-semibold text-sm">Representación de 2,024</div>
+                            </div>
+                            
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between items-center border-b border-amber-500/20 pb-1">
+                                    <span class="text-amber-200">5 × 400 (20²)</span>
+                                    <span class="font-bold text-amber-400">= 2,000</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-amber-500/20 pb-1">
+                                    <span class="text-amber-200">10 × 20 (20¹)</span>
+                                    <span class="font-bold text-amber-400">= 200</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-amber-500/20 pb-1">
+                                    <span class="text-amber-200">4 × 1 (20⁰)</span>
+                                    <span class="font-bold text-amber-400">= 24</span>
+                                </div>
+                                <div class="flex justify-between items-center pt-2 text-lg font-bold text-amber-400">
+                                    <span>Total</span>
+                                    <span>2,024</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-xs text-amber-300/70 text-center relative z-10">
+                            Base 20: cada nivel sube multiplicando por 20 (no por 10)
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 5. Sistema Binario -->
+            <article class="card-hover rounded-2xl overflow-hidden shadow-2xl bg-white relative group lg:col-span-2 xl:col-span-1">
+                <div class="h-2 bg-gradient-to-r from-green-600 via-green-400 to-emerald-300"></div>
+                <div class="binary-bg text-green-400 p-8 h-full flex flex-col relative">
+                    <div class="binary-rain" id="binaryRain"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-2xl font-bold" style="font-family: 'Press Start 2P', monospace; font-size: 1.2rem;">BINARIO</h3>
+                            <span class="text-4xl">💻</span>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <p class="text-green-300 text-sm mb-4 italic" style="font-family: monospace;">Sistema posicional base 2</p>
+                            <div class="grid grid-cols-4 gap-2 text-center text-xl mb-4 bg-green-900/30 p-3 rounded-lg border border-green-500/30">
+                                <div class="text-green-300 font-bold">0<br><span class="text-xs text-green-500">off</span></div>
+                                <div class="text-green-300 font-bold">1<br><span class="text-xs text-green-500">on</span></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-black/60 backdrop-blur rounded-xl p-6 mb-4 flex-grow border border-green-500/50 shadow-[0_0_20px_rgba(0,255,0,0.2)]">
+                            <div class="text-center mb-4">
+                                <div class="text-3xl mb-2 tracking-widest text-green-400 font-mono font-bold break-all" id="binary-display">
+                                    11111101000
+                                </div>
+                                <div class="text-green-300 font-semibold text-sm">Representación de 2,024</div>
+                            </div>
+                            
+                            <div class="space-y-1 text-xs font-mono">
+                                <div class="grid grid-cols-11 gap-1 text-center text-green-600 mb-2">
+                                    <span>2¹⁰</span><span>2⁹</span><span>2⁸</span><span>2⁷</span><span>2⁶</span>
+                                    <span>2⁵</span><span>2⁴</span><span>2³</span><span>2²</span><span>2¹</span><span>2⁰</span>
+                                </div>
+                                <div class="grid grid-cols-11 gap-1 text-center mb-3">
+                                    <span>1</span><span>1</span><span>1</span><span>1</span><span>1</span>
+                                    <span>1</span><span>0</span><span>1</span><span>0</span><span>0</span><span>0</span>
+                                </div>
+                                <div class="space-y-1 text-green-300">
+                                    <div class="flex justify-between border-b border-green-800 pb-1">
+                                        <span>1×1024 + 1×512 + 1×256</span>
+                                        <span>= 1,792</span>
+                                    </div>
+                                    <div class="flex justify-between border-b border-green-800 pb-1">
+                                        <span>+ 1×128 + 1×64 + 1×32</span>
+                                        <span>= 224</span>
+                                    </div>
+                                    <div class="flex justify-between border-b border-green-800 pb-1">
+                                        <span>+ 0×16 + 1×8 + 0×4...</span>
+                                        <span>= 8</span>
+                                    </div>
+                                    <div class="flex justify-between pt-2 text-green-400 font-bold">
+                                        <span>TOTAL</span>
+                                        <span>2,024</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-xs text-green-500/70 text-center relative z-10 font-mono">
+                            Lenguaje de las computadoras: solo 0 y 1
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+
+        <!-- Tabla Comparativa -->
+        <section class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <div class="bg-slate-800 text-white p-6">
+                <h2 class="text-3xl font-bold text-center" style="font-family: 'Cinzel', serif;">Tabla Comparativa de Sistemas</h2>
+                <p class="text-center text-slate-300 mt-2">Comparación del número 2,024 en diferentes bases</p>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100">
+                            <th class="p-4 border-b-2 border-slate-300 font-bold text-slate-700">Sistema</th>
+                            <th class="p-4 border-b-2 border-slate-300 font-bold text-slate-700">Base</th>
+                            <th class="p-4 border-b-2 border-slate-300 font-bold text-slate-700">Representación</th>
+                            <th class="p-4 border-b-2 border-slate-300 font-bold text-slate-700">Tipo</th>
+                            <th class="p-4 border-b-2 border-slate-300 font-bold text-slate-700">Ventaja Principal</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                        <tr class="hover:bg-amber-50 transition-colors">
+                            <td class="p-4 font-semibold text-amber-900">Egipcio</td>
+                            <td class="p-4"><span class="bg-amber-100 px-2 py-1 rounded text-amber-800">10 (aditivo)</span></td>
+                            <td class="p-4 text-2xl" style="font-family: 'Noto Sans Egyptian Hieroglyphs';">𓆼𓆼𓍢𓎆𓎆𓏻𓏻𓏻𓏻</td>
+                            <td class="p-4 text-sm">Jeroglífico aditivo</td>
+                            <td class="p-4 text-sm">Visual e intuitivo</td>
+                        </tr>
+                        <tr class="hover:bg-red-50 transition-colors">
+                            <td class="p-4 font-semibold text-red-900">Romano</td>
+                            <td class="p-4"><span class="bg-red-100 px-2 py-1 rounded text-red-800">10 (aditivo)</span></td>
+                            <td class="p-4 text-2xl roman-font font-bold">MMXXIV</td>
+                            <td class="p-4 text-sm">Aditivo-sustractivo</td>
+                            <td class="p-4 text-sm">Compacto para números grandes</td>
+                        </tr>
+                        <tr class="hover:bg-emerald-50 transition-colors">
+                            <td class="p-4 font-semibold text-emerald-900">Chino</td>
+                            <td class="p-4"><span class="bg-emerald-100 px-2 py-1 rounded text-emerald-800">10 (multiplicativo)</span></td>
+                            <td class="p-4 text-2xl chinese-font">二千二十四</td>
+                            <td class="p-4 text-sm">Multiplicativo-posicional</td>
+                            <td class="p-4 text-sm">Lógica clara de multiplicación</td>
+                        </tr>
+                        <tr class="hover:bg-amber-50 transition-colors">
+                            <td class="p-4 font-semibold text-amber-800">Maya</td>
+                            <td class="p-4"><span class="bg-amber-200 px-2 py-1 rounded text-amber-900">20 (posicional)</span></td>
+                            <td class="p-4 text-2xl">𝍠𝍠𝍠𝍠𝍠<br>——<br>••••</td>
+                            <td class="p-4 text-sm">Vigesimal-posicional</td>
+                            <td class="p-4 text-sm">Incluía el concepto de cero</td>
+                        </tr>
+                        <tr class="hover:bg-green-50 transition-colors">
+                            <td class="p-4 font-semibold text-green-900">Binario</td>
+                            <td class="p-4"><span class="bg-green-100 px-2 py-1 rounded text-green-800">2 (posicional)</span></td>
+                            <td class="p-4 text-2xl font-mono text-green-700">11111101000</td>
+                            <td class="p-4 text-sm">Posicional base 2</td>
+                            <td class="p-4 text-sm">Compatible con circuitos electrónicos</td>
+                        </tr>
+                        <tr class="bg-slate-50 font-bold">
+                            <td class="p-4 text-slate-900">Decimal</td>
+                            <td class="p-4"><span class="bg-slate-200 px-2 py-1 rounded text-slate-800">10 (posicional)</span></td>
+                            <td class="p-4 text-2xl text-slate-700">2024</td>
+                            <td class="p-4 text-sm">Posicional base 10</td>
+                            <td class="p-4 text-sm">Uso universal actual</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Línea del Tiempo -->
+        <section class="relative py-12">
+            <h2 class="text-3xl font-bold text-center mb-12 text-white" style="font-family: 'Cinzel', serif;">Evolución Histórica</h2>
+            
+            <div class="relative">
+                <div class="timeline-line absolute top-1/2 left-0 right-0 transform -translate-y-1/2 hidden md:block"></div>
+                
+                <div class="grid md:grid-cols-5 gap-8 relative">
+                    <div class="bg-slate-800 p-6 rounded-xl text-center relative group hover:scale-105 transition-transform">
+                        <div class="text-amber-400 text-4xl mb-2">𓂀</div>
+                        <div class="text-white font-bold">3000 a.C.</div>
+                        <div class="text-amber-200 text-sm mt-2">Egipto</div>
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-amber-500 rounded-full border-4 border-slate-900 hidden md:block"></div>
+                    </div>
+                    
+                    <div class="bg-slate-800 p-6 rounded-xl text-center relative group hover:scale-105 transition-transform">
+                        <div class="text-red-400 text-4xl mb-2">🏛️</div>
+                        <div class="text-white font-bold">500 a.C.</div>
+                        <div class="text-red-200 text-sm mt-2">Roma</div>
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-red-500 rounded-full border-4 border-slate-900 hidden md:block"></div>
+                    </div>
+                    
+                    <div class="bg-slate-800 p-6 rounded-xl text-center relative group hover:scale-105 transition-transform">
+                        <div class="text-emerald-400 text-4xl mb-2">🐉</div>
+                        <div class="text-white font-bold">1500 a.C.</div>
+                        <div class="text-emerald-200 text-sm mt-2">China</div>
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-emerald-500 rounded-full border-4 border-slate-900 hidden md:block"></div>
+                    </div>
+                    
+                    <div class="bg-slate-800 p-6 rounded-xl text-center relative group hover:scale-105 transition-transform">
+                        <div class="text-amber-500 text-4xl mb-2">🌞</div>
+                        <div class="text-white font-bold">300 d.C.</div>
+                        <div class="text-amber-200 text-sm mt-2">Maya</div>
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-amber-600 rounded-full border-4 border-slate-900 hidden md:block"></div>
+                    </div>
+                    
+                    <div class="bg-slate-800 p-6 rounded-xl text-center relative group hover:scale-105 transition-transform pulse-glow">
+                        <div class="text-green-400 text-4xl mb-2">💻</div>
+                        <div class="text-white font-bold">1703 d.C.</div>
+                        <div class="text-green-200 text-sm mt-2">Binario</div>
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-green-500 rounded-full border-4 border-slate-900 hidden md:block animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conversor Interactivo -->
+        <section class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl p-8 text-white">
+            <h2 class="text-3xl font-bold text-center mb-8" style="font-family: 'Cinzel', serif;">Conversor Interactivo</h2>
+            
+            <div class="max-w-2xl mx-auto">
+                <div class="mb-6">
+                    <label class="block text-slate-300 mb-2 text-sm font-semibold uppercase tracking-wider">Ingresa un número (1-4999):</label>
+                    <input type="number" id="inputNumber" min="1" max="4999" value="2024" 
+                           class="w-full bg-slate-700 border-2 border-slate-600 rounded-lg px-4 py-3 text-2xl text-center text-white focus:border-amber-500 focus:outline-none transition-colors"
+                           oninput="convertNumber(this.value)">
+                </div>
+                
+                <div class="grid gap-4" id="conversionResults">
+                    <div class="bg-slate-700/50 p-4 rounded-lg flex justify-between items-center border border-slate-600">
+                        <span class="text-amber-400 font-bold">Romano:</span>
+                        <span class="text-2xl roman-font" id="conv-roman">MMXXIV</span>
+                    </div>
+                    <div class="bg-slate-700/50 p-4 rounded-lg flex justify-between items-center border border-slate-600">
+                        <span class="text-green-400 font-bold font-mono">Binario:</span>
+                        <span class="text-xl font-mono text-green-300" id="conv-binary">11111101000</span>
+                    </div>
+                    <div class="bg-slate-700/50 p-4 rounded-lg flex justify-between items-center border border-slate-600">
+                        <span class="text-amber-200 font-bold">Egipcio:</span>
+                        <span class="text-2xl" style="font-family: 'Noto Sans Egyptian Hieroglyphs';" id="conv-egyptian">𓆼𓆼𓍢𓎆𓎆𓏻𓏻𓏻𓏻</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-16 text-center">
+        <p class="mb-2">Infografía educativa sobre sistemas numéricos históricos</p>
+        <p class="text-sm">Desde los jeroglíficos del Nilo hasta el código máquina</p>
+    </footer>
+
+    <script>
+        // Animación de lluvia binaria
+        function createBinaryRain() {
+            const container = document.getElementById('binaryRain');
+            const chars = '01';
+            let content = '';
+            for (let i = 0; i < 20; i++) {
+                let line = '';
+                for (let j = 0; j < 30; j++) {
+                    line += chars[Math.floor(Math.random() * chars.length)] + ' ';
+                }
+                content += line + '\n';
+            }
+            container.textContent = content;
+        }
+        
+        setInterval(createBinaryRain, 200);
+        createBinaryRain();
+
+        // Conversor de números
+        function convertNumber(num) {
+            num = parseInt(num) || 0;
+            if (num < 1) num = 1;
+            if (num > 4999) num = 4999;
+            
+            // Romano
+            const roman = toRoman(num);
+            document.getElementById('conv-roman').textContent = roman;
+            
+            // Binario
+            document.getElementById('conv-binary').textContent = num.toString(2);
+            
+            // Egipcio (simplificado para visualización)
+            document.getElementById('conv-egyptian').textContent = toEgyptian(num);
+        }
+
+        function toRoman(num) {
+            const values = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+            const symbols = ['M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I'];
+            let result = '';
+            for (let i = 0; i < values.length; i++) {
+                while (num >= values[i]) {
+                    result += symbols[i];
+                    num -= values[i];
+                }
+            }
+            return result;
+        }
+
+        function toEgyptian(num) {
+            // Simplificación visual usando caracteres Unicode aproximados
+            let result = '';
+            const thousands = Math.floor(num / 1000);
+            const hundreds = Math.floor((num % 1000) / 100);
+            const tens = Math.floor((num % 100) / 10);
+            const ones = num % 10;
+            
+            result += '𓆼'.repeat(thousands) + ' ';
+            result += '𓍢'.repeat(hundreds) + ' ';
+            result += '𓎆'.repeat(tens) + ' ';
+            result += '𓏻'.repeat(ones);
+            
+            return result || '𓏺';
+        }
+
+        // Animación de entrada
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+            
+            document.querySelectorAll('article').forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = `all 0.6s ease ${index * 0.1}s`;
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
